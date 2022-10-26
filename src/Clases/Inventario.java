@@ -420,7 +420,107 @@ public class Inventario implements Iterable<Producto>{
 
     public static void addNuevoProducto(Producto producto){
 
-        System.out.print(producto.volcar());
+
+        try  {
+
+            Connection connection = DriverManager.getConnection(
+                    "jdbc:mariadb://localhost:3316/anderioPrime",
+                    "root", "root"
+            );
+
+            PreparedStatement stmt;
+
+            String[] propiedades = producto.volcar().split(" ");
+
+            String query = "";
+
+            String tipo = propiedades[propiedades.length - 1].trim();
+
+            switch (tipo){
+                case "Herramienta":
+                    query = "INSERT INTO PRODUCTOS ( "
+                            + " nombre,                 "
+                            + " precio,                   "
+                            + " cantidad,             "
+                            + " peso,                   "
+                            + " tipo)                   "
+                            + "VALUES (                   "
+                            + " ?,                        "
+                            + " ?,                        "
+                            + " ?,                        "
+                            + " ?,                        "
+                            + " ?);                             ";
+                    
+                    stmt = connection.prepareStatement(query);
+                    stmt.setString(1, producto.getNombre());
+                    stmt.setDouble(2, producto.getPrecio());
+                    stmt.setInt(3, producto.getCantidad());
+                    stmt.setDouble(4, producto.getPeso());
+                    stmt.setString(5, tipo);
+                    break;
+                case "Otros":
+                    query = "INSERT INTO PRODUCTOS ( "
+                            + " nombre,                 "
+                            + " precio,                   "
+                            + " cantidad,             "
+                            + " peso,                   "
+                            + " especificacion,                   "
+                            + " tipo)                   "
+                            + "VALUES (                   "
+                            + " ?,                        "
+                            + " ?,                        "
+                            + " ?,                        "
+                            + " ?,                        "
+                            + " ?,                        "
+                            + " ?);                             ";
+
+                    stmt = connection.prepareStatement(query);
+                    stmt.setString(1, producto.getNombre());
+                    stmt.setDouble(2, producto.getPrecio());
+                    stmt.setInt(3, producto.getCantidad());
+                    stmt.setDouble(4, producto.getPeso());
+                    stmt.setString(5, propiedades[propiedades.length - 2]);
+                    stmt.setString(6, tipo);
+                    break;
+                default:
+                    String[] fechaSplit = propiedades[5].split("/");
+
+                    String fechaParaMaria = fechaSplit[2] + "-" + fechaSplit[1] + "-" + fechaSplit[0];
+
+                    query = "INSERT INTO PRODUCTOS ( "
+                            + " nombre,                 "
+                            + " precio,                   "
+                            + " cantidad,             "
+                            + " peso,                   "
+                            + " fechaCad,                 "
+                            + " especificacion,                   "
+                            + " tipo)                   "
+                            + "VALUES (                   "
+                            + " ?,                        "
+                            + " ?,                        "
+                            + " ?,                        "
+                            + " ?,                        "
+                            + " ?,                        "
+                            + " ?,                        "
+                            + " ?);  ";
+
+                        stmt = connection.prepareStatement(query);
+                        stmt.setString(1, producto.getNombre());
+                        stmt.setDouble(2, producto.getPrecio());
+                        stmt.setInt(3, producto.getCantidad());
+                        stmt.setDouble(4, producto.getPeso());
+                        stmt.setString(5, fechaParaMaria);
+                        stmt.setString(6, propiedades[propiedades.length - 2]);
+                        stmt.setString(7, tipo);
+                    break;
+            }
+
+            stmt.executeQuery();
+
+        }catch(SQLException e){
+            
+            e.printStackTrace();
+        }
     }
 
     public static void mostrarProductos(){
@@ -622,7 +722,25 @@ public class Inventario implements Iterable<Producto>{
     }
 
     public static void eliminarProducto(int id){
-        listaProductos.set(id, null);
+        try  {
+
+            Connection connection = DriverManager.getConnection(
+                    "jdbc:mariadb://localhost:3316/anderioPrime",
+                    "root", "root"
+            );
+
+            PreparedStatement stmt = connection.prepareStatement("DELETE FROM PRODUCTOS WHERE id = ?;");
+
+            stmt.setInt(1, id);
+
+            
+
+            stmt.executeQuery();
+
+        }catch(SQLException e){
+            
+            System.out.println("Introduce un Código válido");
+        }
     }
 
     @Override

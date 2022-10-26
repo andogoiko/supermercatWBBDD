@@ -49,7 +49,7 @@ public class Main {
                             scannerGlobal.nextLine();
                             p = Inventario.actualizarCantidad(opcion, cant);   //actualiza el mismo producto del inventario
                             //NO ES NECESARIA LA ACTUALIZACIÃ“N DESDE INVENTARIO!!
-                            System.out.println("Producto actualizado: "+p.getNombre()+", Nueva cantidad en almacÃ©n: "+p.getCantidad());
+                            System.out.println("Producto actualizado: "+p.getNombre()+", Nueva cantidad en almacÃ©n: " + p.getCantidad());
                             System.out.println();
                             pause();
                         }
@@ -58,12 +58,12 @@ public class Main {
                     while (opcion!=0) {
                         mostrarMenuAddNuevoProducto();
                         System.out.println("Opción? ");
-                        opcion = leerOpcion(6); // 5 clases de productos y salida del menÃº
+                        opcion = leerOpcion(5); // 5 clases de productos y salida del menÃº
                         if (opcion!=0) {
                             Producto P = nuevoProducto(opcion);
                             Inventario.addNuevoProducto(P);
-                            System.out.println("Producto añadido, número "+Inventario.tamanyo());
-                            Inventario.getProducto(Inventario.tamanyo() - 1).imprimir(); //imprime el Ãºltimo producto incluido
+                            //System.out.println("Producto añadido, número "+Inventario.tamanyo());
+                            P.imprimir(); //imprime el Ãºltimo producto incluido
                             System.out.println();
                             System.out.println();
                             pause();

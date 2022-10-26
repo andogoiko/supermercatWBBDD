@@ -579,7 +579,7 @@ public class Inventario implements Iterable<Producto>{
             try (PreparedStatement statement = connection.prepareStatement("""
             SELECT *
             FROM PRODUCTOS
-            WHERE tipo NOT Otros
+            WHERE tipo != 'Otros'
         """)) {
                 ResultSet resultSet = statement.executeQuery();
                 while (resultSet.next()) {
